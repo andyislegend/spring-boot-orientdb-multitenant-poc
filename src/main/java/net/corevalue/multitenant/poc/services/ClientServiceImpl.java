@@ -2,6 +2,7 @@ package net.corevalue.multitenant.poc.services;
 
 import com.orientechnologies.orient.core.db.ODatabasePool;
 import com.orientechnologies.orient.core.db.ODatabaseSession;
+import com.orientechnologies.orient.core.sql.executor.OResultSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.corevalue.multitenant.poc.context.TenantContext;
@@ -25,32 +26,33 @@ public class ClientServiceImpl implements ClientService {
     @Value("${multi-tenant.poc.queries.customers-by-country}")
     private String customersQuery;
 
-    public List<Map<String, String>> getCountries() {
-        List<Map<String, String>> countries = new ArrayList<>();
+    public Set<Map<String, String>> getCountries() {
+        Set<Map<String, String>> countries = new HashSet<>();
         String tenant = TenantContext.getCurrentTenant();
         Optional.ofNullable(orientPools.get(tenant)).ifPresent(pool -> {
             try (ODatabaseSession db = pool.acquire()) {
-                countries.addAll(db.command(countriesQuery)
-                        .stream().map(r -> r.getPropertyNames().stream()
-                                .collect(toMap(Function.identity(), v -> r.getProperty(v).toString())))
-                        .collect(toList()));
+                countries.addAll(convert(db.command(countriesQuery)));
             }
         });
         return countries;
     }
 
     @Override
-    public List<Map<String, String>> getCustomerDetails(String countryCode) {
-        List<Map<String, String>> customers = new ArrayList<>();
+    public Set<Map<String, String>> getCustomerDetails(String countryCode) {
+        Set<Map<String, String>> customers = new HashSet<>();
         String tenant = TenantContext.getCurrentTenant();
         Optional.ofNullable(orientPools.get(tenant)).ifPresent(pool -> {
             try (ODatabaseSession db = pool.acquire()) {
-                customers.addAll(db.command(customersQuery, Collections.singletonMap("countryCode", countryCode))
-                        .stream().map(r -> r.getPropertyNames().stream()
-                                .collect(toMap(Function.identity(), v -> r.getProperty(v).toString())))
-                        .collect(toList()));
+                customers.addAll(convert(db.command(customersQuery,
+                        Collections.singletonMap("countryCode", countryCode))));
             }
         });
         return customers;
+    }
+
+    private Set<Map<String, String>> convert(OResultSet oResultSet) {
+        return oResultSet.stream().map(r -> r.getPropertyNames().stream()
+                .collect(toMap(Function.identity(), v -> r.getProperty(v).toString())))
+                .collect(toSet());
     }
 }
