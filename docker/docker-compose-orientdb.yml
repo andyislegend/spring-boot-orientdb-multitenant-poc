@@ -1,0 +1,20 @@
+version: "3.5"
+
+services:
+  orientdb:
+    image: orientdb:latest
+    container_name: orientdb
+    restart: always
+    environment:
+      - ORIENTDB_ROOT_PASSWORD=rootpwd
+    ports:
+      - 2424:2424
+      - 2480:2480
+    volumes:
+      - ~/projects/orientdb/databases:/orientdb/databases
+      - ~/projects/orientdb/backup:/orientdb/backup
+
+networks:
+  default:
+    external:
+      name: cv-network
