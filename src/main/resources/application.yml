@@ -3,7 +3,8 @@ server:
 
 multi-tenant.poc:
   orient-db:
-    host: localhost
+    host: orientdb
+    port: 2424
     db: demodb
     pool:
       min: 5

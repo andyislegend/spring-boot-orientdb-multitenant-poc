@@ -1,0 +1,18 @@
+version: "3.5"
+
+services:
+  multitenant-poc:
+    container_name: multitenant-poc
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JVM_OPTS=-Xmx256m
+    ports:
+      - 8001:8001
+
+networks:
+  default:
+    external:
+      name: cv

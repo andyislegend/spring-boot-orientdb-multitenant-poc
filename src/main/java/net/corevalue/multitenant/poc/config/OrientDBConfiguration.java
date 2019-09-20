@@ -22,7 +22,8 @@ public class OrientDBConfiguration {
 
     @Bean
     OrientDB orientDB(MultiTenantProperties props) {
-        return new OrientDB(String.format("remote:%s", props.getOrientDb().getHost()), OrientDBConfig.defaultConfig());
+        return new OrientDB(String.format("remote:%s:%d",
+                props.getOrientDb().getHost(), props.getOrientDb().getPort()), OrientDBConfig.defaultConfig());
     }
 
     @Bean

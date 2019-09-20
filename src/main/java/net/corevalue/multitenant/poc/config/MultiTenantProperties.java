@@ -24,6 +24,7 @@ class MultiTenantProperties {
     @Getter @Setter
     static class OrientDb {
         private String host;
+        private int port;
         private String db;
         private OrientDbPool pool;
 

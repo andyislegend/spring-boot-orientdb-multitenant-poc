@@ -3,6 +3,12 @@ buildscript {
 		springBootVersion = '2.1.7.RELEASE'
 		orientDbVersion = '3.0.23'
 	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }
 
 plugins {
@@ -35,4 +41,8 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar {
+	archiveName = "${project.name}.jar"
 }

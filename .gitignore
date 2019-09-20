@@ -30,3 +30,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### misc
+/infrastructure/orientdb/backup/
+/infrastructure/orientdb/databases/

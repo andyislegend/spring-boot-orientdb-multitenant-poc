@@ -11,10 +11,11 @@ services:
       - 2424:2424
       - 2480:2480
     volumes:
-      - ~/projects/orientdb/databases:/orientdb/databases
-      - ~/projects/orientdb/backup:/orientdb/backup
+      - ./orientdb/databases:/orientdb/databases
+      - ./orientdb/backup:/orientdb/backup
+      - ./orientdb/scripts:/orientdb/scripts
 
 networks:
   default:
     external:
-      name: cv-network
+      name: cv
