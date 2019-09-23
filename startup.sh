@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 #### Check for dependencies ####
 if ! [ -x "$(command -v curl)" ]; then
