@@ -1,0 +1,37 @@
+server:
+  port: 8001
+
+multi-tenant.poc:
+  orient-db:
+    host: orientdb
+    port: 2424
+    db: demodb
+    pool:
+      min: 5
+      max: 10
+  tenants:
+    - name: client1
+      pwd: client1_pwd
+    - name: client2
+      pwd: client2_pwd
+  queries:
+    countries: >
+      select Id   as CountryId
+           , Code as CountryCode
+           , Name as CountryName
+        from Countries
+       order by CountryId
+    customers-by-country: >
+      select Id                                            as profileId
+           , Name                                          as customerName
+           , Surname                                       as customerSurname
+           , Birthday                                      as customerBirthday
+           , Email                                         as customerEmail
+           , in('HasProfile').Phone[0]                     as customerPhone
+           , in('HasProfile').out('IsFromCountry').Name[0] as customerCountry
+        from ( select expand( out('HasProfile') )
+                 from ( select expand( in('IsFromCountry') )
+                          from Countries
+                         where Code = :countryCode
+                      )
+             )
